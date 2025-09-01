@@ -1,96 +1,264 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <script defer src="/_vercel/insights/script.js"></script>
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/@exampledev/new.css@1.1.2/new.min.css"
-    />
-    <title>Vercel HTML Starter</title>
-    <meta
-      name="description"
-      content="High-performance HTML based website template."
-    />
-  </head>
-  <body>
-    <h1>Vercel HTML Starter</h1>
-    <p>
-      This template is a simple, but powerful single
-      <code>index.html</code> file deployed to
-      <a href="https://vercel.com">Vercel</a>. When your site is deployed, all
-      static assets (like HTML, JavaScript, CSS, images, and more) are deployed
-      globally to every
-      <a href="https://vercel.com/docs/concepts/edge-network/overview"
-        >Vercel Edge Network</a
-      >
-      region.
-    </p>
-    <h2>Simple, privacy-friendly analytics</h2>
-    <p>
-      Want to understand your visitor traffic? Vercel Analytics gives you
-      first-party, privacy-friendly traffic analytics for your HTML site. This
-      template is already configured using the following script:
-    </p>
-    <pre><code>&lt;script defer src="/_vercel/insights/script.js"&gt;&lt;/script&gt;</code></pre>
-    <p>
-      Learn more about
-      <a href="https://vercel.com/analytics">Vercel Analytics</a>.
-    </p>
-    <h2>Integrated with git</h2>
-    <p>
-      Deploying updates to your site is as simple as
-      <code>git push</code> thanks to Vercel's advanced
-      <a href="https://vercel.com/docs/concepts/git">Git Integration</a>.
-      Support for GitHub, GitLab, Bitbucket is zero-configuration, and with the
-      flexible Vercel CLI and API, you can integrate with any tool possible.
-    </p>
-    <p>
-      Learn more about
-      <a href="https://vercel.com/docs/concepts/git">Git Integration</a>.
-    </p>
-    <h2>Fast <code>gzip</code> compression</h2>
-    <p>
-      To help ensure the smallest possible file sizes for your static assets,
-      the Vercel Edge Network compresses files by default using
-      <code>gzip</code>. You can also optionally use
-      <code>brotli</code> compressesion if you prefer.
-    </p>
-    <p>
-      Learn more about
-      <a href="https://vercel.com/docs/concepts/edge-network/compression"
-        >compression</a
-      >.
-    </p>
-    <h2>Advanced routing configuration</h2>
-    <p>
-      Vercel gives you a variety of ways to configure the routing of your
-      website. For example, adding redirects, rewrites, or headers to your page.
-      While you can use <code>vercel.json</code> to define these through JSON,
-      you can also express your routing configuration as code using
-      <a href="https://vercel.com/docs/concepts/functions/edge-middleware"
-        >Vercel Edge Middleware</a
-      >.
-    </p>
-    <p>
-      Middleware runs before the
-      <a href="https://vercel.com/docs/concepts/edge-network/caching"
-        >Vercel Edge Network Cache</a
-      >, so you can configure routing exactly as your application needs. For
-      example, this template uses <code>middleware.js</code> defined in the root
-      of the repository to add additional security headers to the site:
-    </p>
-    <pre><code>referrer-policy: origin-when-cross-origin
-strict-transport-security: max-age=31536000; includeSubDomains; preload
-x-content-type-options: nosniff
-x-dns-prefetch-control: on
-x-frame-options: DENY</code></pre>
-    <p>
-      Learn more about
-      <a href="https://vercel.com/docs/concepts/functions/edge-middleware"
-        >Vercel Edge Middleware</a
-      >.
-    </p>
-  </body>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Session Scribe</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: "Inter", sans-serif;
+            background-color: #0D0D0D;
+        }
+        @keyframes pulse {
+            0%, 100% { transform: scale(0.5); opacity: 0; }
+            50% { opacity: 0.7; }
+            75% { transform: scale(1); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <script type="text/babel">
+        const { useState, useEffect } = React;
+
+        // --- Shorthand Glossary ---
+        const shorthandGlossary = {"tx": "therapy", "acc": "accuracy", "ST": "speech therapy", "SPED / SE": "special education", "IEP": "Individualized Education Program", "prog mon / PM": "progress monitoring", "lvl / gr": "grade level", "rdg comp / rc": "reading comprehension", "wrt": "writing", "exp lang": "expressive language", "rec lang": "receptive language", "artic": "articulation", "phon": "phonological skills", "flu / fl": "fluency", "soc com / prag": "social communication / pragmatic language", "voc": "vocabulary", "sem": "semantics", "syn": "syntax", "aud comp / AL": "auditory comprehension / auditory listening", "exec fxn / EF": "executive functioning", "beh": "behavior", "attn": "attention", "prac": "practice", "hw": "homework", "indep": "independent", "mod": "moderate", "min": "minimal", "max": "maximum", "cues / cued": "prompting / cues", "grp": "group", "1:1": "one-on-one", "SLP": "Speech-Language Pathologist", "SW": "social worker", "OT": "occupational therapy", "PT": "physical therapy", "AAC": "augmentative and alternative communication", "FAPE": "Free Appropriate Public Education", "LRE": "Least Restrictive Environment", "mtg": "meeting", "collab": "collaboration", "gen ed": "general education", "sped staff / se staff": "special education staff", "ALE": "alternative learning environment", "IA": "Independence Academy", "DDSEC": "Don Sherrill Education Center", "NEC": "Nuernberger Education Center", "YH": "Yankee Hill", "SSP": "Student Support Program", "ISP": "Individual Success Program", "GP": "Graduation Pathways", "Bryan / BC": "Bryan Community", "WH": "Whitehall", "EC": "Early Childhood", "LS": "Life Skills", "ID": "Intellectual Disability", "aut": "Autism", "ASD": "Autism Spectrum Disorder", "ED": "Emotional Disability", "SED": "Social-Emotional Disability", "DD": "Developmental Delay", "VI": "Visual Impairment", "HI": "Hearing Impairment", "TBI": "Traumatic Brain Injury", "AT": "Assistive Technology", "PECS": "Picture Exchange Communication System", "SRT": "Student Response to Intervention", "RTI": "Response to Intervention", "BIP": "Behavior Intervention Plan", "FBA": "Functional Behavior Assessment", "BCBA": "Board Certified Behavior Analyst", "PLAAFP": "Present Levels of Academic Achievement and Functional Performance", "PLOP": "Present Levels of Performance", "CO-TX / cotx / co tx": "Co-therapy", "DIS": "Direct Instructional Support", "EL": "English Learner", "ELL": "English Language Learner", "CALP/ BICS": "Cognitive Academic Language Proficiency / Basic Interpersonal Communication Skills", "SCA": "Social Communication Assessment", "TELD": "Test of Early Language Development", "CELF": "Clinical Evaluation of Language Fundamentals", "OWLS": "Oral and Written Language Scales", "CASL": "Comprehensive Assessment of Spoken Language", "EVT": "Expressive Vocabulary Test", "PPVT": "Peabody Picture Vocabulary Test", "IDD": "Intellectual and Developmental Disabilities", "AAC eval": "AAC evaluation", "MTSS": "Multi-Tiered System of Supports"};
+        const knownAcronyms = new Set(Object.keys(shorthandGlossary).map(k => k.toUpperCase().split(' / ')[0]));
+
+
+        // --- Icon Components ---
+        const IconFullscreenEnter = () => (
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+        );
+        const IconFullscreenExit = () => (
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M8 3v3a2 2 0 0 1-2 2H3m18 0h-3a2 2 0 0 1-2-2V3m0 18v-3a2 2 0 0 1 2-2h3M3 16h3a2 2 0 0 1 2 2v3"/></svg>
+        );
+
+
+        // --- Custom Thematic Components ---
+        const MagicalLoadingIndicator = () => (
+            <div className="flex justify-center items-center h-40">
+                <div className="relative w-16 h-16">{[...Array(3)].map((_, i) => (<div key={i} className="absolute inset-0 rounded-full bg-[#6EA665] opacity-0" style={{ animation: `pulse 2.5s ease-in-out infinite`, animationDelay: `${i * 0.4}s`, boxShadow: '0 0 10px #6EA665, 0 0 20px #6EA665' }}></div>)) }</div>
+            </div>
+        );
+
+        const ComplianceModal = ({ show, onConfirm, onCancel }) => {
+            if (!show) return null;
+            return (
+                <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4">
+                    <div className="bg-[#062601] border border-[#154001] rounded-2xl shadow-2xl p-8 max-w-md w-full text-center">
+                        <img src="https://raw.githubusercontent.com/navasdo/oliver/refs/heads/main/navacite-tng/images/compliance.png" alt="Compliance Icon" className="w-32 mx-auto mb-4 [filter:drop-shadow(0_0_15px_rgba(255,255,255,0.3))]"/>
+                        <p className="text-[#D3F2B3]/90 italic mb-6">The spectral quills pause, hovering over the parchment. To protect the sacred trust between worlds and comply with FERPA, no personally identifiable information should be scribed. Do you confirm your entry is compliant?</p>
+                        <div className="flex justify-center gap-4">
+                            <button onClick={onCancel} className="px-6 py-2 bg-gray-600 text-white font-bold rounded-lg shadow-md hover:bg-gray-700 transition">No, I'll Edit</button>
+                            <button onClick={onConfirm} className="px-6 py-2 bg-[#154001] text-white font-bold rounded-lg shadow-md hover:bg-[#6EA665] transition">Yes, I Comply</button>
+                        </div>
+                    </div>
+                </div>
+            );
+        };
+
+        // --- Main App Component ---
+        const App = () => {
+            const [screen, setScreen] = useState('setup');
+            const [isLoading, setIsLoading] = useState(false);
+            const [error, setError] = useState(null);
+            const [isFullscreen, setIsFullscreen] = useState(false);
+            const [userInput, setUserInput] = useState('');
+            const [generatedNote, setGeneratedNote] = useState('');
+            const [showComplianceModal, setShowComplianceModal] = useState(false);
+
+            const toggleFullscreen = () => {
+                if (!document.fullscreenElement) {
+                    document.documentElement.requestFullscreen().catch(err => {
+                        console.error(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
+                        setError("Fullscreen mode is not permitted in this view.");
+                    });
+                } else {
+                    if (document.exitFullscreen) {
+                        document.exitFullscreen();
+                    }
+                }
+            };
+
+            useEffect(() => {
+                const handleFullscreenChange = () => {
+                    setIsFullscreen(!!document.fullscreenElement);
+                };
+                document.addEventListener('fullscreenchange', handleFullscreenChange);
+                return () => document.removeEventListener('fullscreenchange', handleFullscreenChange);
+            }, []);
+
+            useEffect(() => {
+                if (error) {
+                    const timeoutId = setTimeout(() => setError(null), 5000);
+                    return () => clearTimeout(timeoutId);
+                }
+            }, [error]);
+
+            const handleScribeClick = () => {
+                const capitalizedWordRegex = /\b[A-Z][a-z'-]+\b/g;
+                let potentialNamesFromCaps = (userInput.match(capitalizedWordRegex) || [])
+                    .filter(word => !knownAcronyms.has(word.toUpperCase()));
+                let potentialNamesFromGrammar = [];
+
+                const prepPattern = /\b(with|for|to)\s+([A-Z][a-zA-Z'-]+)\b/g;
+                let prepMatch;
+                while ((prepMatch = prepPattern.exec(userInput)) !== null) {
+                    potentialNamesFromGrammar.push(prepMatch[2]);
+                }
+
+                const contextPattern = /\b([a-zA-Z]{3,})\s+(on|about|regarding)\s+(his|her|their)\b/gi;
+                let contextMatch;
+                while ((contextMatch = contextPattern.exec(userInput)) !== null) {
+                    const potentialName = contextMatch[1];
+                    if (!/^(student|client|patient)$/i.test(potentialName)) {
+                        potentialNamesFromGrammar.push(potentialName);
+                    }
+                }
+                const allPotentialNames = [...new Set([...potentialNamesFromCaps, ...potentialNamesFromGrammar])];
+                const finalPotentialNames = allPotentialNames.filter(name => !knownAcronyms.has(name.toUpperCase()));
+
+                if (finalPotentialNames.length > 0) {
+                    console.log("Potential PII detected:", finalPotentialNames);
+                    setShowComplianceModal(true);
+                } else {
+                    handleGenerate();
+                }
+            };
+
+            const handleModalConfirm = () => {
+                setShowComplianceModal(false);
+                handleGenerate();
+            };
+
+            const handleGenerate = async () => {
+                if (!userInput.trim()) {
+                    setError("Please enter your notes before scribing.");
+                    return;
+                }
+                setIsLoading(true);
+                setError(null);
+                setShowComplianceModal(false);
+
+                const systemPrompt = `You are a Speech-Language Pathologist’s assistant. Your only task is to take shorthand prompts (fragments, abbreviations, or incomplete sentences) and expand them into full, professional attendance notes for school-based therapy. Write in a clear, concise, professional tone appropriate for clinical documentation. Crucially, all notes must be de-identified. Always refer to individuals as "the student" or "the students" and use neutral pronouns (they/them/their) to ensure anonymity and FERPA compliance. Use the provided glossary to expand shorthand. For terms not in the glossary, expand them logically.`;
+                const userQuery = `Using the following glossary, please expand the shorthand note below into a professional therapy note.\n\nGlossary:\n${JSON.stringify(shorthandGlossary, null, 2)}\n\nShorthand Note:\n"${userInput}"`;
+                const apiKey = "AIzaSyCmgouHfiXaHHK4f7FVNQ9hke2ujQ8YDRg";
+                const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-05-20:generateContent?key=${apiKey}`;
+
+                try {
+                    const response = await fetch(apiUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            contents: [{ parts: [{ text: userQuery }] }],
+                            systemInstruction: { parts: [{ text: systemPrompt }] },
+                        })
+                    });
+                    if (!response.ok) throw new Error(`API Error: ${response.statusText}`);
+                    const result = await response.json();
+                    const note = result.candidates?.[0]?.content?.parts?.[0]?.text;
+                    if (note) {
+                        setGeneratedNote(note);
+                        setScreen('results');
+                    } else {
+                        throw new Error("Failed to generate a valid note.");
+                    }
+                } catch (err) {
+                    setError(err.message);
+                } finally {
+                    setIsLoading(false);
+                }
+            };
+
+            const handleRestart = () => {
+                setUserInput('');
+                setGeneratedNote('');
+                setScreen('setup');
+            };
+
+            const renderScreen = () => {
+                switch (screen) {
+                    case 'results':
+                        return <ResultsScreen onRestart={handleRestart} note={generatedNote} />;
+                    case 'setup':
+                    default:
+                        return <SetupScreen onScribe={handleScribeClick} isLoading={isLoading} userInput={userInput} setUserInput={setUserInput} />;
+                }
+            };
+
+            return (
+                <div className="bg-[#0D0D0D] min-h-screen font-sans text-[#D3F2B3] relative">
+                    <ComplianceModal show={showComplianceModal} onConfirm={handleModalConfirm} onCancel={() => setShowComplianceModal(false)} />
+                    <button onClick={toggleFullscreen} className="absolute top-4 left-4 z-10 p-2 rounded-full bg-gray-700 hover:bg-gray-600 transition text-gray-200" title={isFullscreen ? "Exit Fullscreen" : "Enter Fullscreen"}>{isFullscreen ? <IconFullscreenExit /> : <IconFullscreenEnter />}</button>
+                    <a href="/" className="absolute top-4 right-4 z-10 p-1 rounded-full bg-gray-700/50 hover:bg-gray-600/50 transition" title="Back to Homepage"><img src="https://raw.githubusercontent.com/navasdo/oliver/main/navacite/gems/Navacite-Main.png" alt="Navacite Homepage" className="w-10 h-10 rounded-full"/></a>
+                    <div className="container mx-auto p-4 sm:p-6 lg:p-8">
+                        <header className="text-center mb-8">
+                            <img src="https://raw.githubusercontent.com/navasdo/oliver/refs/heads/main/navacite-tng/images/Navacite-TNG.png" alt="App Gem" className="w-48 mx-auto mb-4 [filter:drop-shadow(0_0_15px_rgba(255,255,255,0.3))]"/>
+                            <h1 className="text-4xl font-bold text-[#6EA665]">Session Scribe<sup>v1.10</sup></h1>
+                            <p className="text-sm text-gray-400 italic mt-2">Concept by Daniel Navas, M.A., CCC-SLP & Coded in Tandem with Google Gemini</p>
+                        </header>
+                        {error && <div className="text-red-400 bg-red-900/50 p-3 rounded-lg text-center my-4 max-w-4xl mx-auto">{error}</div>}
+                        <main className="bg-[#062601]/50 p-6 sm:p-8 rounded-2xl shadow-lg max-w-4xl mx-auto border border-[#154001]">{renderScreen()}</main>
+                    </div>
+                </div>
+            );
+        };
+
+        const SetupScreen = ({ onScribe, isLoading, userInput, setUserInput }) => {
+            const currentDate = new Date().toLocaleDateString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+            const today = new Date();
+            const datePlaceholder = `[${String(today.getMonth() + 1).padStart(2, '0')}/${String(today.getDate()).padStart(2, '0')}]`;
+            const placeholderText = `e.g., grp tx, artic, /r/, initial pos, min cues, 75% acc.\n\n...becomes, with the aid of the spectral scribes...\n\n${datePlaceholder}: Student participated in a group therapy session targeting articulation of the /r/ sound in the initial position of words, achieving 75% accuracy with minimal cues.`;
+
+            return (
+                <div className="space-y-6">
+                    <div className="text-center p-3 rounded-lg bg-[#154001]/75"><p className="font-semibold text-[#D3F2B3]">{currentDate}</p></div>
+                    <div className="text-center italic text-[#D3F2B3]/90 px-4 py-2"><p>Whisper your shorthand notes below. This Navacite summons the spectral quills of Master Scribes from ages past. Knowing the burden of clerical work, they are eager to transform your fragments into fully-formed professional records.</p></div>
+                    <div>
+                        <textarea
+                            rows="7"
+                            className="w-full bg-[#0D0D0D]/50 border border-[#154001] rounded-lg p-3 text-[#D3F2B3] placeholder:text-[#D3F2B3]/50 focus:ring-2 focus:ring-[#6EA665] focus:outline-none transition"
+                            placeholder={placeholderText}
+                            value={userInput}
+                            onChange={(e) => setUserInput(e.target.value)}
+                        ></textarea>
+                    </div>
+                    {isLoading ? <MagicalLoadingIndicator /> : (
+                        <div className="pt-4 text-center">
+                            <button onClick={onScribe} disabled={isLoading} className="group disabled:opacity-50 disabled:cursor-not-allowed focus:outline-none">
+                                <img src="https://raw.githubusercontent.com/navasdo/oliver/refs/heads/main/navacite-tng/images/quill.png" alt="Generate" className="h-32 mx-auto [filter:drop-shadow(0_0_15px_rgba(255,255,255,0.3))] transition-transform transform group-hover:scale-110"/>
+                                <p className="mt-2 text-lg font-semibold text-[#D3F2B3] transition-transform transform group-hover:scale-110">Ready to Scribe</p>
+                            </button>
+                        </div>
+                    )}
+                </div>
+            );
+        };
+
+        const ResultsScreen = ({ onRestart, note }) => {
+            return (
+                <div className="space-y-6">
+                    <h2 className="text-2xl font-semibold text-[#D3F2B3] text-center">Your Scribed Note</h2>
+                    <div className="bg-[#0D0D0D]/50 border border-[#154001] rounded-lg p-4 min-h-[150px]">
+                        <p className="text-[#D3F2B3] whitespace-pre-wrap">{note}</p>
+                    </div>
+                    <div className="pt-4 text-center">
+                        <button onClick={onRestart} className="transition-transform transform hover:scale-110">
+                            <img src="https://raw.githubusercontent.com/navasdo/oliver/refs/heads/main/navacite-tng/images/moon_eraser.png" alt="Start New" className="h-24 mx-auto [filter:drop-shadow(0_0_15px_rgba(255,255,255,0.3))]"/>
+                        </button>
+                    </div>
+                </div>
+            );
+        };
+
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<App />);
+    </script>
+</body>
 </html>
